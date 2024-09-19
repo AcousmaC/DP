@@ -15,7 +15,7 @@ from torch.optim.optimizer import Optimizer
 
 
 # 自定义动量更新
-class AdamWithThirdMoment(Optimizer):
+class ThirdOrderMomentumOptimizer(Optimizer):
     def __init__(self, params, lr=0.001, betas=(0.9, 0.999), eps=1e-8, weight_decay=0):
         defaults = dict(lr=lr, betas=betas, eps=eps, weight_decay=weight_decay)
         super(AdamWithThirdMoment, self).__init__(params, defaults)
@@ -108,7 +108,7 @@ class Client(object):
         LTB = datetime.datetime.now()
         for name, param in model.state_dict().items():
             self.local_model.state_dict()[name].copy_(param.clone())
-        optimizer = AdamWithThirdMoment(
+        optimizer = ThirdOrderMomentumOptimizer(
             self.local_model.parameters(),
             lr=self.conf['lr'],
             betas=(self.conf['beta1'], self.conf['beta2']),
